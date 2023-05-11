@@ -1,0 +1,38 @@
+stages:
+  - test
+  - build
+  - publish
+
+test:
+  stage: test
+  image: python:3.x
+  script:
+    - mamba env create -f environment.yml
+    - source activate my_project
+    - poetry install
+    - poetry run pytest tests/
+
+build:
+  stage: build
+  image: python:3.x
+  script:
+    - mamba env create -f environment.yml
+    - source activate my_project
+    - poetry install
+    - poetry build
+  artifacts:
+    paths:
+      - dist/
+
+publish:
+  stage: publish
+  image: python:3.x
+  script:
+    - mamba env create -f environment.yml
+    - source activate my_project
+    - poetry install
+    - poetry config repositories.gitlab.url https://<your-gitlab-instance-url>/api/v4/projects/<your-project-id>/packages/pypi
+    - poetry config pypi-token.gitlab <your-gitlab-token>
+    - poetry publish -r gitlab
+  only:
+    - tags
