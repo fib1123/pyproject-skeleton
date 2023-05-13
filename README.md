@@ -87,6 +87,7 @@ my_environment_name = os.environ.get('VARIABLE_NAME')
 ## Directory Structure
 
 - `myproject/`: The top-level directory that contains your Python package.
+- `notebooks/`: Directory for your jupyter notebooks
 - `tests/`: The directory that contains your test files.
 - `environment.yml`: The file that specifies your Python, CUDA, and CUDNN versions, as well as Mamba dependencies.
 - `pyproject.toml`: The file that specifies your package's metadata and dependencies using the modern approach.
