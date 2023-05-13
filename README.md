@@ -24,29 +24,65 @@ Install Poetry by following the instructions in the [official documentation](htt
 
 ## Development Flow
 
-1. Create the environment and install the dependencies: 
-```
-make install # setups mamba env
-mamba activate myproject # poetry and everything else needs to be setup within mamba
-poetry install # install the packages defined in pyproject.toml.
-```
-2. **Activate the Mamba environment**: Activate the environment with `mamba activate myproject`
 
-3. When you want to add or update dependencies, update the environment:
-* if conda dependency then update environment.yml and run `make update-env`
-* if pip based dependency then update pyproject.toml and run `poetry install` or `poetry add <package>`
 
-4. **Run tests**: `make test`
+1. Create a `.env` file in your project's root directory using the provided template: `.env_template`. Fill in desired env variables (please note that project name is taken from .environment.yml file)
 
-5. To bump the version, run: `make bump-version part=<part>`
+2. Run the setup script ` source scripts/setup_env.sh` (use source to execute in current terminal context!)
+
+This script will do the following:
+
+- Read the configuration from the `.env` file.
+- Create a Mamba environment using the `environment.yml` file.
+- Set up the project by activating the Mamba environment and installing the required packages using Poetry.
+
+3. **Activate the Mamba environment**: Activate the environment with `mamba activate $PROJECT_NAME`
+
+4. When you want to add or update dependencies, update the environment:
+* if conda dependency then update environment.yml and run `make update-conda`
+* if pip based dependency then update pyproject.toml and run `poetry install` or `poetry add <package>` (be sure to do it within conda env)
+
+5. **Run tests**: `make test`
+
+6. To bump the version, run: `bump2version $(part)`
 
 Replace `<part>` with `major`, `minor`, or `patch` depending on which part of the version you want to increment.
 
-6. Commit your changes, push them to GitLab, and create a merge request.
+7. Commit your changes, push them to GitLab, and create a merge request.
 
-7. GitLab CI/CD will automatically run tests, build, and publish the package to your GitLab package registry whenever a new tag is created.
+8. GitLab CI/CD will automatically run tests, build, and publish the package to your GitLab package registry whenever a new tag is created.
 
 This setup provides a streamlined development flow by combining the strengths of Mamba and Poetry for environment and dependency management. Mamba efficiently handles non-Python dependencies and environment creation, while Poetry offers an intuitive way to manage Python dependencies and package building, the Makefile simplifies common tasks
+
+## Configuration using .env file and python-dotenv
+This project allows you to store environment-specific configurations in a .env file, which makes it easy to manage settings across different environments. The .env file should be located in the root directory of the project. We will use the python-dotenv package to load the environment variables from the .env file.
+
+Setting up the .env file
+Create a new file named .env in the project's root directory.
+
+Add your environment-specific settings, one per line, using the following format:
+
+```
+VARIABLE_NAME=value
+```
+
+### Loading env to console:
+```
+source .env
+```
+### Using the .env file in your Python code
+To use the environment variables defined in the .env file, you need to load them using the python-dotenv package. Add the following lines at the beginning of your Python script or application entry point:
+
+```
+from dotenv import load_dotenv
+load_dotenv()
+```
+The environment variables will now be available in your Python code using os.environ:
+
+```
+import os
+my_environment_name = os.environ.get('VARIABLE_NAME')
+```
 
 ## Directory Structure
 
@@ -59,4 +95,11 @@ This setup provides a streamlined development flow by combining the strengths of
 - `Makefile`: The file that contains shortcuts for running common commands.
 - `README.md`: The file that contains a description of your project and usage instructions.
 - `.gitignore`: The file that lists files and directories to ignore in your Git repository.
+- `scripts/`: The directory that contains your setup script (`setup_env.sh`).
 
+
+
+___
+## Sources
+* https://stackoverflow.com/questions/70851048/does-it-make-sense-to-use-conda-poetry
+* https://github.com/the-full-stack/conda-piptools

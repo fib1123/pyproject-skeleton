@@ -1,13 +1,10 @@
-.PHONY: install update-env test bump-version
+.PHONY: install_conda update_conda test bump-version
 
-install:
-	mamba env create -f environment.yml --name my_project || mamba env update -f environment.yml --name my_project
+install_conda:
+	mamba env create -f environment.yml
 
-update-env:
+update_conda:
 	mamba env update -f environment.yml
 
 test:
 	pytest tests/
-
-bump-version:
-	poetry run bump2version $(part)
