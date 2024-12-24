@@ -39,7 +39,7 @@ This script will do the following:
 3. **Activate the Mamba environment**: Activate the environment with `mamba activate $PROJECT_NAME`
 
 4. When you want to add or update dependencies, update the environment:
-* if conda dependency then update environment.yml and run `make update-conda`
+* if conda dependency then update environment.yml and run `make update_conda`
 * if pip based dependency then update pyproject.toml and run `poetry install` or `poetry add <package>` (be sure to do it within conda env). If the dependency is just for development add flag -D
 
 5. **Run tests**: `make test`
